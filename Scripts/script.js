@@ -83,6 +83,11 @@ function calculateResult(firstArg,opertorType,secArg){
             isThereSecArg=false;
             break;
         case '-':
+            net=subtract(Number(firstArg),Number(secArg));
+            firstArg=net;
+            currentOperator='';
+            isThereSecArg=false;
+            break;
         case '*':
         case '/':
     }
@@ -93,5 +98,6 @@ const add = function(a,b) {
     return a+b;
   };
 
-
-  
+const subtract = function(a,b) {
+	return a-b;
+};
