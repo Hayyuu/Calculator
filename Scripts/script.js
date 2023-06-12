@@ -28,7 +28,7 @@ function inputNumber(e){
         console.log('sec'+sec_result);
     }
     if(input.textContent==0){
-        input.textContent='';
+            input.textContent=''; 
     }
     if(!currentOperator){
         input.textContent+=e.target.textContent;
@@ -41,56 +41,62 @@ operators.forEach(item=>{
     item.addEventListener('click',operatorClicked);
 });
 function operatorClicked(e){
-    currentOperator=e.target.textContent;
+    if(!isThereSecArg){
+        currentOperator=e.target.textContent;
+        if(input.textContent==0){
+            if(currentOperator=='-'){
+                input.textContent='';
+                input.textContent+=currentOperator;
+            }
+            else{
+                input.textContent='';
+            }
+        }
+    }
+    else{
+        oldOperator=currentOperator;
+        currentOperator=e.target.textContent;
+    }
     if (currentOperator!='='){
         if(isThereSecArg){
-            first_result=calculateResult(first_result,currentOperator,sec_result);
+            first_result=calculateResult(first_result,oldOperator,sec_result);
+            oldOperator='';
             sec_result='';
-            input.textContent=`${first_result}`;
-            isThereSecArg=false;
+            input.textContent=`${first_result}${currentOperator}`;
+            
         }
         else{
         input.textContent+=e.target.textContent;
         }
-        oldOperator=currentOperator;
-
     }
-    if(isThereSecArg && currentOperator== '='){
-       sec_result= calculateResult(first_result,oldOperator,sec_result);
-    }
+    if(isThereSecArg && currentOperator=== '='){
+        first_result = calculateResult(first_result,oldOperator,sec_result);
+        oldOperator='';
+        sec_result='';
+        input.textContent=`${first_result}`;
+     }
    
     
 }
-function displayResult(operatorType,final_result){
-    switch(operatorType){
-        case '=':
-            input.textContent='';
-            input.textContent=final_result;
-        default:
-            input.textContent='';
-            input.textContent=final_result;
-    }
-}
+
 function calculateResult(firstArg,opertorType,secArg){
     let net;
     switch(opertorType){
-        case '=':
-
         case '+':
             net=add(Number(firstArg),Number(secArg));
-            firstArg=net;
-            currentOperator='';
-            isThereSecArg=false;
             break;
         case '-':
             net=subtract(Number(firstArg),Number(secArg));
-            firstArg=net;
-            currentOperator='';
-            isThereSecArg=false;
             break;
-        case '*':
+        case 'x':
+            net=multiply(Number(firstArg),Number(secArg));
+            break;
         case '/':
+            net=divide(Number(firstArg),Number(secArg));
+            break;
+        
     }
+    isThereSecArg=false;
     return net;
 
 }
@@ -101,3 +107,9 @@ const add = function(a,b) {
 const subtract = function(a,b) {
 	return a-b;
 };
+const multiply = function(a,b) {
+    return a*b;
+  };
+const divide = function(a,b) {
+    return a/b;
+  };
